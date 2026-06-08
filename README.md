@@ -23,10 +23,10 @@ Then open http://localhost:8080
 
 - `index.html` — Homepage
 - `services.html` — Testing & mitigation details
-- `faq.html` — Categorized FAQ with filtering
+- `learn.html` — Learn section (radon education, FAQs, and resources)
 - `contact.html` — Contact form + service area
 - `css/styles.css` — Complete design system (navy/teal/gold)
-- `js/main.js` — Mobile menu, FAQ accordions, form handling, scroll effects
+- `js/main.js` — Mobile menu, accordion interactions, form handling, scroll effects
 - `images/` — Logo + key photography
 
 ## Tech
