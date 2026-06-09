@@ -32,6 +32,7 @@
       <nav class="nav-desktop logged-in-nav">
         <a href="customers.html">Customers</a>
         <a href="estimates.html" class="active">Estimates</a>
+        <a href="reports.html">Reports</a>
         <a href="invoices.html">Invoices</a>
         <a href="#" class="logout-btn">Logout</a>
       </nav>
@@ -39,22 +40,161 @@
   </header>
 
   <section id="estimates" style="padding: 2.5rem 0; background: #f8fafc; padding-top: 100px;">
-    <div class="container" style="max-width: 720px;">
+    <div class="container" style="max-width: 900px;">
       <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(12, 35, 64, 0.08);">
-        <h2 style="color: var(--navy); margin: 0 0 1rem;">Your Current Estimates</h2>
-        
-        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-          <strong>123 Maple St, Edmonton AB</strong><br>
-          Sub-Slab Depressurization System<br>
-          <span style="color: #0d9488; font-weight: 600;">$2,450 – $2,850</span> • Valid 30 days<br><br>
-          <button onclick="alert('Thank you! We will contact you to schedule installation. (Demo)');" style="background: var(--teal); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Accept Estimate</button>
+        <h2 style="color: var(--navy); margin: 0 0 1rem;">Estimates</h2>
+        <p style="color: var(--gray-600); margin-bottom: 1.25rem;">Create detailed radon mitigation estimates or manage existing ones.</p>
+
+        <!-- New Estimate Form -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.75rem;">
+          <h3 id="estimate-form-title" style="margin: 0 0 0.9rem; color: var(--navy); font-size: 1.05rem;">Create New Estimate</h3>
+          <form id="estimate-form" style="display: grid; gap: 0.9rem;">
+
+            <!-- Customer & Property -->
+            <div>
+              <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy); font-weight:500;">Associated Customer (optional)</label>
+              <select id="est-customer" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+                <option value="">-- Manual entry --</option>
+              </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Property Address *</label>
+                <input type="text" id="est-address" required style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Property Type</label>
+                <select id="est-property-type" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+                  <option>Residential Home</option>
+                  <option>Multi-Family / Apartment</option>
+                  <option>Commercial Building</option>
+                  <option>School / Institution</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Foundation Type</label>
+                <select id="est-foundation" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+                  <option>Full Basement</option>
+                  <option>Crawl Space</option>
+                  <option>Slab-on-Grade</option>
+                  <option>Combination</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Area to Mitigate (sq ft)</label>
+                <input type="number" id="est-area" value="1200" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+            </div>
+
+            <!-- Radon Levels -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Pre-Mitigation Level (Bq/m³) *</label>
+                <input type="number" id="est-pre-radon" value="185" required style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Target Level (Bq/m³)</label>
+                <input type="number" id="est-target-radon" value="100" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Test Date</label>
+                <input type="date" id="est-test-date" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+            </div>
+
+            <!-- System Design -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Primary System Type</label>
+                <select id="est-system-type" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+                  <option>Sub-Slab Depressurization (SSD)</option>
+                  <option>Crawlspace Sub-Membrane Depressurization</option>
+                  <option>Block Wall Depressurization</option>
+                  <option>Drain Tile Depressurization</option>
+                  <option>Combination System</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);"># Suction Points</label>
+                <input type="number" id="est-points" value="1" min="1" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Fan Model</label>
+                <select id="est-fan" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+                  <option>RadonAway GP201</option>
+                  <option>Fantech FG4 / HP Series</option>
+                  <option>RadonAway XP</option>
+                  <option>Other / Custom</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Piping Diameter</label>
+                <select id="est-pipe" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+                  <option>4 inch</option>
+                  <option>3 inch</option>
+                </select>
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Est. Pipe Length (ft)</label>
+                <input type="number" id="est-pipe-length" value="35" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Additional Work / Components</label>
+              <input type="text" id="est-additional" placeholder="e.g. Sump pit cover, crack sealing, vapor barrier, new electrical" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+            </div>
+
+            <!-- Pricing -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Low Estimate (CAD $) *</label>
+                <input type="number" id="est-low" value="2450" required style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">High Estimate (CAD $) *</label>
+                <input type="number" id="est-high" value="2850" required style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Valid for (days)</label>
+                <input type="number" id="est-valid" value="30" style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem;">
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block; font-size:0.8rem; margin-bottom:0.2rem; color:var(--navy);">Notes / Assumptions</label>
+              <textarea id="est-notes" rows="2" placeholder="Access notes, exclusions, warranty details, timeline..." style="width:100%; padding:0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem; resize:vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+              <button id="estimate-submit-btn" type="submit" class="btn btn-primary" style="width: fit-content; padding: 0.55rem 1.35rem; font-size:0.9rem;">Create Estimate</button>
+              <button type="button" id="estimate-cancel-btn" style="display:none; background:transparent; color:#64748b; border:1px solid #e2e8f0; padding:0.55rem 1rem; border-radius:6px; cursor:pointer; font-size:0.9rem;">Cancel</button>
+              <button type="button" onclick="suggestPricing()" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:0.55rem 1rem; border-radius:6px; cursor:pointer; font-size:0.85rem;">Suggest Pricing</button>
+            </div>
+          </form>
+          <div id="estimate-success" style="display:none; margin-top:0.75rem; background:#ccfbf1; color:#0f766e; padding:0.6rem 0.9rem; border-radius:6px; font-weight:500; font-size:0.9rem;">
+            Estimate created successfully! (Demo)
+          </div>
         </div>
 
-        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
-          <strong>456 Oak Ave, Sherwood Park AB</strong><br>
-          Crawl Space Mitigation<br>
-          <span style="color: #0d9488; font-weight: 600;">$1,950 – $2,300</span> • Valid 30 days<br><br>
-          <button onclick="alert('Thank you! We will contact you to schedule installation. (Demo)');" style="background: var(--teal); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Accept Estimate</button>
+        <!-- Search -->
+        <div style="margin-bottom: 0.75rem;">
+          <input type="text" id="estimate-search" placeholder="Search estimates by address, customer, system type, or status..." 
+                 style="width: 100%; padding: 0.55rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.9rem;">
+        </div>
+
+        <h3 style="margin: 0.25rem 0 0.6rem; color: var(--navy); font-size: 1rem;">Current Estimates</h3>
+        <div id="estimate-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+          <!-- Populated dynamically via JS + localStorage -->
         </div>
       </div>
     </div>
@@ -117,6 +257,438 @@
         window.location.href = 'index.html';
       });
     });
+
+    // Estimates persistence with localStorage (parallel to customers)
+    const EST_STORAGE_KEY = 'radonSafeguardEstimates';
+    let estimates = [];
+    let customersCache = [];
+    let editingEstimateId = null;
+
+    function loadCustomersForSelect() {
+      try {
+        const saved = localStorage.getItem('radonSafeguardCustomers');
+        customersCache = saved ? JSON.parse(saved) : [];
+      } catch (e) { customersCache = []; }
+
+      const select = document.getElementById('est-customer');
+      if (!select) return;
+
+      select.innerHTML = '<option value="">-- Manual entry --</option>';
+      customersCache.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        const name = [c.firstName, c.lastName].filter(Boolean).join(' ');
+        opt.textContent = `${name || 'Customer'} — ${c.address || ''}`;
+        select.appendChild(opt);
+      });
+
+      // Auto-fill address when a customer is chosen
+      select.addEventListener('change', () => {
+        const custId = Number(select.value);
+        if (!custId) return;
+        const cust = customersCache.find(c => c.id === custId);
+        if (cust) {
+          const addrEl = document.getElementById('est-address');
+          if (addrEl && !addrEl.value) addrEl.value = cust.address || '';
+        }
+      });
+    }
+
+    function loadEstimates() {
+      const saved = localStorage.getItem(EST_STORAGE_KEY);
+      if (saved) {
+        estimates = JSON.parse(saved);
+      } else {
+        // Seed with realistic demo data matching the previous static cards
+        const now = Date.now();
+        estimates = [
+          {
+            id: now - 100000,
+            created: new Date(now - 100000).toISOString(),
+            customerName: 'Sarah M.',
+            address: '123 Maple St, Edmonton AB',
+            propertyType: 'Residential Home',
+            foundationType: 'Full Basement',
+            areaSqft: 1250,
+            preRadon: 185,
+            targetRadon: 100,
+            systemType: 'Sub-Slab Depressurization (SSD)',
+            suctionPoints: 1,
+            fanType: 'RadonAway GP201',
+            pipeDiameter: '4 inch',
+            pipeLengthFt: 28,
+            additionalWork: 'Sump pit cover, crack sealing',
+            lowTotal: 2450,
+            highTotal: 2850,
+            validDays: 30,
+            notes: 'Standard residential SSD. Good access. 5-year warranty on fan and labor.',
+            status: 'Sent'
+          },
+          {
+            id: now - 50000,
+            created: new Date(now - 50000).toISOString(),
+            customerName: 'James R.',
+            address: '456 Oak Ave, Sherwood Park AB',
+            propertyType: 'Residential Home',
+            foundationType: 'Crawl Space',
+            areaSqft: 980,
+            preRadon: 142,
+            targetRadon: 100,
+            systemType: 'Crawlspace Sub-Membrane Depressurization',
+            suctionPoints: 1,
+            fanType: 'Fantech FG4 / HP Series',
+            pipeDiameter: '4 inch',
+            pipeLengthFt: 22,
+            additionalWork: 'Vapor barrier, perimeter sealing',
+            lowTotal: 1950,
+            highTotal: 2300,
+            validDays: 30,
+            notes: 'Crawlspace encapsulation + active depressurization. Limited headroom.',
+            status: 'Draft'
+          }
+        ];
+        saveEstimates();
+      }
+    }
+
+    function saveEstimates() {
+      localStorage.setItem(EST_STORAGE_KEY, JSON.stringify(estimates));
+    }
+
+    function renderEstimates(filteredList = estimates) {
+      const container = document.getElementById('estimate-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!filteredList || filteredList.length === 0) {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'color:#64748b; font-size:0.9rem; padding:0.5rem 0; grid-column: 1 / -1;';
+        empty.textContent = 'No estimates yet. Create one using the form above.';
+        container.appendChild(empty);
+        return;
+      }
+
+      // Sort newest first
+      const sorted = [...filteredList].sort((a, b) => (b.created || '').localeCompare(a.created || ''));
+
+      sorted.forEach(est => {
+        const card = document.createElement('div');
+        card.style.cssText = 'background:white; border:1px solid #e2e8f0; border-radius:8px; padding:1rem; position:relative;';
+        card.dataset.id = est.id;
+
+        const customerLine = est.customerName ? `<small style="color:#64748b;">${est.customerName}</small><br>` : '';
+        const areaLine = est.areaSqft ? `${est.areaSqft} sq ft • ` : '';
+        const radonLine = est.preRadon ? `Pre: ${est.preRadon} Bq/m³ → &lt;${est.targetRadon || 100}` : '';
+
+        let html = `
+          <strong>${est.address}</strong><br>
+          ${customerLine}
+          <span style="color:#0d9488; font-weight:600;">${est.systemType}</span><br>
+          <small>${areaLine}${radonLine}</small><br>
+          <span style="color:#0d9488; font-weight:600;">$${est.lowTotal} – $${est.highTotal}</span> • ${est.validDays || 30} days<br>
+          <small style="color:#64748b;">Status: ${est.status || 'Draft'}</small>
+        `;
+
+        card.innerHTML = html;
+
+        // Action buttons
+        const actions = document.createElement('div');
+        actions.style.cssText = 'margin-top:0.75rem; display:flex; gap:0.4rem; flex-wrap:wrap;';
+
+        const acceptBtn = document.createElement('button');
+        acceptBtn.textContent = est.status === 'Accepted' ? 'Accepted' : 'Accept';
+        acceptBtn.style.cssText = 'background:' + (est.status === 'Accepted' ? '#166534' : 'var(--teal)') + '; color:white; border:none; padding:0.35rem 0.65rem; border-radius:5px; font-size:0.8rem; cursor:' + (est.status === 'Accepted' ? 'default' : 'pointer') + ';';
+        if (est.status !== 'Accepted') {
+          acceptBtn.onclick = () => acceptEstimate(est.id);
+        }
+        actions.appendChild(acceptBtn);
+
+        const detailsBtn = document.createElement('button');
+        detailsBtn.textContent = 'Details';
+        detailsBtn.style.cssText = 'background:transparent; color:#0d9488; border:1px solid #bae6fd; padding:0.35rem 0.65rem; border-radius:5px; font-size:0.8rem; cursor:pointer;';
+        detailsBtn.onclick = () => viewEstimateDetails(est.id);
+        actions.appendChild(detailsBtn);
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Edit';
+        editBtn.style.cssText = 'background:transparent; color:#64748b; border:1px solid #e2e8f0; padding:0.35rem 0.65rem; border-radius:5px; font-size:0.8rem; cursor:pointer;';
+        editBtn.onclick = () => editEstimate(est.id);
+        actions.appendChild(editBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '×';
+        delBtn.style.cssText = 'background:transparent; color:#ef4444; border:none; padding:0.2rem 0.5rem; font-size:1rem; line-height:1; cursor:pointer; margin-left:auto;';
+        delBtn.title = 'Delete estimate';
+        delBtn.onclick = () => deleteEstimate(est.id);
+        actions.appendChild(delBtn);
+
+        card.appendChild(actions);
+        container.appendChild(card);
+      });
+    }
+
+    function suggestPricing() {
+      const area = parseFloat(document.getElementById('est-area').value) || 1000;
+      const points = parseInt(document.getElementById('est-points').value) || 1;
+      const system = document.getElementById('est-system-type').value || '';
+
+      let base = 1650;
+      if (system.includes('Crawlspace')) base = 1550;
+      if (system.includes('Combination')) base = 1950;
+
+      const perSqFt = 0.75;
+      const perPoint = 420;
+      const fanCost = 480;
+
+      let low = Math.round(base + (area * perSqFt) + (points * perPoint) + fanCost);
+      let high = Math.round(low * 1.18);
+
+      // Apply some realism
+      if (low < 1400) low = 1400;
+      if (high < low + 300) high = low + 400;
+
+      document.getElementById('est-low').value = low;
+      document.getElementById('est-high').value = high;
+
+      const success = document.getElementById('estimate-success');
+      if (success) {
+        success.style.display = 'block';
+        success.textContent = 'Suggested pricing calculated based on area, points, and system type. Adjust as needed.';
+        setTimeout(() => { if (success) success.style.display = 'none'; }, 2800);
+      }
+    }
+
+    function viewEstimateDetails(id) {
+      const est = estimates.find(e => e.id === id);
+      if (!est) return;
+
+      const lines = [
+        `Address: ${est.address}`,
+        est.customerName ? `Customer: ${est.customerName}` : null,
+        `Property: ${est.propertyType || ''} • ${est.foundationType || ''}`,
+        est.areaSqft ? `Area: ${est.areaSqft} sq ft` : null,
+        `Pre-mitigation: ${est.preRadon} Bq/m³ → Target < ${est.targetRadon || 100} Bq/m³`,
+        `System: ${est.systemType}`,
+        `Suction points: ${est.suctionPoints || 1} • Fan: ${est.fanType || ''}`,
+        `Piping: ${est.pipeDiameter || ''} × ~${est.pipeLengthFt || '?'} ft`,
+        est.additionalWork ? `Additional: ${est.additionalWork}` : null,
+        `Estimate: $${est.lowTotal} – $${est.highTotal} CAD (valid ${est.validDays || 30} days)`,
+        `Status: ${est.status || 'Draft'}`,
+        est.notes ? `Notes: ${est.notes}` : null
+      ].filter(Boolean);
+
+      alert('Estimate Details (Demo):\n\n' + lines.join('\n'));
+    }
+
+    function acceptEstimate(id) {
+      const idx = estimates.findIndex(e => e.id === id);
+      if (idx === -1) return;
+      estimates[idx].status = 'Accepted';
+      saveEstimates();
+      renderEstimates();
+      // Re-apply search if active
+      const search = document.getElementById('estimate-search');
+      if (search && search.value) {
+        const evt = new Event('input');
+        search.dispatchEvent(evt);
+      }
+      alert('Estimate marked Accepted. (Demo — in a real system this would create an Invoice and notify the customer.)');
+    }
+
+    function deleteEstimate(id) {
+      if (!confirm('Delete this estimate?')) return;
+      estimates = estimates.filter(e => e.id !== id);
+      saveEstimates();
+      renderEstimates();
+
+      const search = document.getElementById('estimate-search');
+      if (search && search.value) {
+        const evt = new Event('input');
+        search.dispatchEvent(evt);
+      }
+    }
+
+    function editEstimate(id) {
+      const est = estimates.find(e => e.id === id);
+      if (!est) return;
+
+      // Populate form
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val != null ? val : '';
+      };
+
+      // Try to match customer select if we have an id or name match
+      const custSelect = document.getElementById('est-customer');
+      if (custSelect && est.customerName) {
+        // best effort: select first matching name fragment
+        let matched = false;
+        for (let opt of custSelect.options) {
+          if (opt.textContent.toLowerCase().includes(est.customerName.toLowerCase())) {
+            custSelect.value = opt.value;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) custSelect.value = '';
+      }
+
+      setVal('est-address', est.address);
+      setVal('est-property-type', est.propertyType);
+      setVal('est-foundation', est.foundationType);
+      setVal('est-area', est.areaSqft);
+      setVal('est-pre-radon', est.preRadon);
+      setVal('est-target-radon', est.targetRadon);
+      setVal('est-test-date', est.testDate ? est.testDate.substring(0,10) : '');
+      setVal('est-system-type', est.systemType);
+      setVal('est-points', est.suctionPoints);
+      setVal('est-fan', est.fanType);
+      setVal('est-pipe', est.pipeDiameter);
+      setVal('est-pipe-length', est.pipeLengthFt);
+      setVal('est-additional', est.additionalWork);
+      setVal('est-low', est.lowTotal);
+      setVal('est-high', est.highTotal);
+      setVal('est-valid', est.validDays);
+      setVal('est-notes', est.notes);
+
+      editingEstimateId = id;
+
+      // Update form UI
+      const title = document.getElementById('estimate-form-title');
+      if (title) title.textContent = 'Edit Estimate';
+      const submitBtn = document.getElementById('estimate-submit-btn');
+      if (submitBtn) submitBtn.textContent = 'Save Changes';
+      const cancelBtn = document.getElementById('estimate-cancel-btn');
+      if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    }
+
+    function resetEstimateForm() {
+      editingEstimateId = null;
+      const form = document.getElementById('estimate-form');
+      if (form) form.reset();
+
+      const title = document.getElementById('estimate-form-title');
+      if (title) title.textContent = 'Create New Estimate';
+      const submitBtn = document.getElementById('estimate-submit-btn');
+      if (submitBtn) submitBtn.textContent = 'Create Estimate';
+      const cancelBtn = document.getElementById('estimate-cancel-btn');
+      if (cancelBtn) cancelBtn.style.display = 'none';
+    }
+
+    function setupEstimateForm() {
+      const form = document.getElementById('estimate-form');
+      const success = document.getElementById('estimate-success');
+      const searchInput = document.getElementById('estimate-search');
+      const cancelBtn = document.getElementById('estimate-cancel-btn');
+
+      if (!form) return;
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const getVal = (id) => {
+          const el = document.getElementById(id);
+          return el ? el.value.trim() : '';
+        };
+
+        const getNum = (id, def = 0) => {
+          const v = parseFloat(getVal(id));
+          return isNaN(v) ? def : v;
+        };
+
+        const custSelect = document.getElementById('est-customer');
+        let customerName = '';
+        let customerId = null;
+        if (custSelect && custSelect.value) {
+          customerId = Number(custSelect.value);
+          const cust = customersCache.find(c => c.id === customerId);
+          if (cust) {
+            customerName = [cust.firstName, cust.lastName].filter(Boolean).join(' ');
+          }
+        }
+
+        const newEst = {
+          id: editingEstimateId || Date.now(),
+          created: editingEstimateId ? (estimates.find(e => e.id === editingEstimateId)?.created || new Date().toISOString()) : new Date().toISOString(),
+          customerId: customerId,
+          customerName: customerName || getVal('est-address').split(',')[0] || 'Manual',
+          address: getVal('est-address'),
+          propertyType: getVal('est-property-type'),
+          foundationType: getVal('est-foundation'),
+          areaSqft: getNum('est-area'),
+          preRadon: getNum('est-pre-radon'),
+          targetRadon: getNum('est-target-radon', 100),
+          testDate: getVal('est-test-date'),
+          systemType: getVal('est-system-type'),
+          suctionPoints: getNum('est-points', 1),
+          fanType: getVal('est-fan'),
+          pipeDiameter: getVal('est-pipe'),
+          pipeLengthFt: getNum('est-pipe-length'),
+          additionalWork: getVal('est-additional'),
+          lowTotal: getNum('est-low'),
+          highTotal: getNum('est-high'),
+          validDays: getNum('est-valid', 30),
+          notes: getVal('est-notes'),
+          status: editingEstimateId ? (estimates.find(e => e.id === editingEstimateId)?.status || 'Draft') : 'Draft'
+        };
+
+        if (editingEstimateId) {
+          const idx = estimates.findIndex(e => e.id === editingEstimateId);
+          if (idx !== -1) estimates[idx] = newEst;
+          success.textContent = 'Estimate updated successfully! (Demo)';
+        } else {
+          estimates.push(newEst);
+          success.textContent = 'Estimate created successfully! (Demo)';
+        }
+
+        saveEstimates();
+        renderEstimates();
+
+        // Re-apply search
+        if (searchInput && searchInput.value) {
+          const evt = new Event('input');
+          searchInput.dispatchEvent(evt);
+        }
+
+        success.style.display = 'block';
+        form.reset();
+        resetEstimateForm();
+
+        setTimeout(() => {
+          if (success) success.style.display = 'none';
+        }, 3200);
+      });
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+          resetEstimateForm();
+        });
+      }
+
+      // Real-time search (DOM filter like customers page)
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const term = this.value.toLowerCase().trim();
+          const cards = document.querySelectorAll('#estimate-list > div');
+          cards.forEach(card => {
+            const txt = card.textContent.toLowerCase();
+            card.style.display = txt.includes(term) ? '' : 'none';
+          });
+        });
+      }
+    }
+
+    function initEstimatesPage() {
+      loadCustomersForSelect();
+      loadEstimates();
+      renderEstimates();
+      setupEstimateForm();
+
+      // Initial search listener already set in setup
+    }
+
+    // Boot the page features
+    initEstimatesPage();
   </script>
 </body>
 </html>

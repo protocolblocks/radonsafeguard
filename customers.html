@@ -32,6 +32,7 @@
       <nav class="nav-desktop logged-in-nav">
         <a href="customers.html" class="active">Customers</a>
         <a href="estimates.html">Estimates</a>
+        <a href="reports.html">Reports</a>
         <a href="invoices.html">Invoices</a>
         <a href="#" class="logout-btn">Logout</a>
       </nav>
@@ -45,17 +46,21 @@
 
       <!-- New Customer Form -->
       <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(12,35,64,0.06);">
-        <h3 style="margin: 0 0 1rem; color: var(--navy); font-size: 1.1rem;">Add New Customer</h3>
+        <h3 id="form-title" style="margin: 0 0 1rem; color: var(--navy); font-size: 1.1rem;">Add New Customer</h3>
         <form id="customer-form" style="display: grid; gap: 1rem;">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div>
-              <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Full Name *</label>
-              <input type="text" id="cust-name" required style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
+              <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">First Name *</label>
+              <input type="text" id="cust-firstname" required style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
             </div>
             <div>
-              <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Phone *</label>
-              <input type="tel" id="cust-phone" required style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
+              <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Last Name *</label>
+              <input type="text" id="cust-lastname" required style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
             </div>
+          </div>
+          <div>
+            <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Phone *</label>
+            <input type="tel" id="cust-phone" required style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
           </div>
           <div>
             <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Email *</label>
@@ -65,27 +70,24 @@
             <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Property Address *</label>
             <input type="text" id="cust-address" required style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div>
-              <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Property Type</label>
-              <select id="cust-type" style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
-                <option>Residential Home</option>
-                <option>Multi-Family / Apartment</option>
-                <option>Commercial Building</option>
-                <option>School / Institution</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div>
-              <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Preferred Test Date</label>
-              <input type="date" id="cust-date" style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
-            </div>
+          <div>
+            <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Property Type</label>
+            <select id="cust-type" style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px;">
+              <option>Residential Home</option>
+              <option>Multi-Family / Apartment</option>
+              <option>Commercial Building</option>
+              <option>School / Institution</option>
+              <option>Other</option>
+            </select>
           </div>
           <div>
             <label style="display:block; font-size:0.85rem; margin-bottom:0.25rem; color:var(--navy);">Notes</label>
             <textarea id="cust-notes" rows="2" style="width:100%; padding:0.6rem; border:1px solid #e2e8f0; border-radius:6px; resize:vertical;"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" style="width: fit-content; padding: 0.6rem 1.5rem;">Add Customer</button>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button id="form-submit-btn" type="submit" class="btn btn-primary" style="width: fit-content; padding: 0.6rem 1.5rem;">Add Customer</button>
+            <button type="button" id="cancel-edit-btn" style="display: none; background: transparent; color: #64748b; border: 1px solid #e2e8f0; padding: 0.6rem 1rem; border-radius: 6px; cursor: pointer;">Cancel</button>
+          </div>
         </form>
         <div id="customer-success" style="display:none; margin-top:1rem; background:#ccfbf1; color:#0f766e; padding:0.75rem 1rem; border-radius:6px; font-weight:500;">
           Customer added successfully! (Demo)
@@ -101,21 +103,7 @@
       <!-- Existing Customers -->
       <h3 style="margin: 0 0 0.75rem; color: var(--navy);">Recent Customers</h3>
       <div id="customer-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
-        <div class="customer-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
-          <strong>Sarah M. — St. Albert</strong><br>
-          <small style="color: #0d9488;">Mitigation Complete</small><br>
-          <span style="font-size: 0.85rem;">Tested: 180 Bq/m³ → Post: 45 Bq/m³</span>
-        </div>
-        <div class="customer-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
-          <strong>James R. — Downtown Edmonton</strong><br>
-          <small style="color: #d4a853;">Testing In Progress</small><br>
-          <span style="font-size: 0.85rem;">Commercial building • 12 zones</span>
-        </div>
-        <div class="customer-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
-          <strong>Linda P. — Sherwood Park</strong><br>
-          <small style="color: #0d9488;">Estimate Accepted</small><br>
-          <span style="font-size: 0.85rem;">Residential • Scheduled for next week</span>
-        </div>
+        <!-- Customers will be loaded from localStorage or seeded here via JS -->
       </div>
     </div>
   </section>
@@ -178,11 +166,184 @@
       });
     });
 
-    // Customer list and search
+    // Customer data persistence with localStorage
+    const STORAGE_KEY = 'radonSafeguardCustomers';
+    let customers = [];
     const customerList = document.getElementById('customer-list');
+    let editingCustomerId = null;
+
+    function loadCustomers() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        customers = JSON.parse(saved);
+      } else {
+        // Seed initial demo data on first visit
+        customers = [
+          {
+            id: Date.now(),
+            firstName: "Sarah",
+            lastName: "M.",
+            address: "St. Albert",
+            status: "Mitigation Complete",
+            details: "Tested: 180 Bq/m³ → Post: 45 Bq/m³",
+            type: "Residential",
+            phone: "",
+            email: "",
+            notes: ""
+          },
+          {
+            id: Date.now() + 1,
+            firstName: "James",
+            lastName: "R.",
+            address: "Downtown Edmonton",
+            status: "Testing In Progress",
+            details: "Commercial building • 12 zones",
+            type: "Commercial",
+            phone: "",
+            email: "",
+            notes: ""
+          },
+          {
+            id: Date.now() + 2,
+            firstName: "Linda",
+            lastName: "P.",
+            address: "Sherwood Park",
+            status: "Estimate Accepted",
+            details: "Residential • Scheduled for next week",
+            type: "Residential",
+            phone: "",
+            email: "",
+            notes: ""
+          }
+        ];
+        saveCustomers();
+      }
+    }
+
+    function saveCustomers() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(customers));
+    }
+
+    function deleteCustomer(id) {
+      if (!confirm('Delete this customer? This cannot be undone. (Demo)')) {
+        return;
+      }
+      customers = customers.filter(c => c.id !== id);
+      saveCustomers();
+      renderCustomers();
+
+      // Re-apply current search filter if active (keeps behavior consistent with adding)
+      if (searchInput && searchInput.value) {
+        const event = new Event('input');
+        searchInput.dispatchEvent(event);
+      }
+    }
+
+    function resetEditMode() {
+      editingCustomerId = null;
+      const title = document.getElementById('form-title');
+      if (title) title.textContent = 'Add New Customer';
+      const submitBtn = document.getElementById('form-submit-btn');
+      if (submitBtn) submitBtn.textContent = 'Add Customer';
+      const cancelBtn = document.getElementById('cancel-edit-btn');
+      if (cancelBtn) cancelBtn.style.display = 'none';
+    }
+
+    function editCustomer(id) {
+      const customer = customers.find(c => c.id === id);
+      if (!customer) return;
+
+      // Populate the form with existing data
+      document.getElementById('cust-firstname').value = customer.firstName || '';
+      document.getElementById('cust-lastname').value = customer.lastName || '';
+      document.getElementById('cust-phone').value = customer.phone || '';
+      document.getElementById('cust-email').value = customer.email || '';
+      document.getElementById('cust-address').value = customer.address || '';
+      document.getElementById('cust-type').value = customer.type || 'Residential Home';
+      document.getElementById('cust-notes').value = customer.notes || '';
+
+      editingCustomerId = id;
+
+      // Switch form to edit mode
+      const title = document.getElementById('form-title');
+      if (title) title.textContent = 'Edit Customer';
+      const submitBtn = document.getElementById('form-submit-btn');
+      if (submitBtn) submitBtn.textContent = 'Save Changes';
+
+      const cancelBtn = document.getElementById('cancel-edit-btn');
+      if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    }
+
+    function renderCustomers(list = customers) {
+      customerList.innerHTML = '';
+      list.forEach(customer => {
+        const card = document.createElement('div');
+        card.className = 'customer-card';
+        card.style.cssText = 'background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; position: relative;';
+        card.dataset.id = customer.id;
+
+        const fullName = customer.firstName && customer.lastName 
+          ? `${customer.firstName} ${customer.lastName}` 
+          : (customer.name || 'Unknown');
+
+        let html = `<strong>${fullName} — ${customer.address}</strong><br>`;
+        if (customer.status) {
+          html += `<small style="color: #0d9488;">${customer.status}</small><br>`;
+        }
+        if (customer.details) {
+          html += `<span style="font-size: 0.85rem;">${customer.details}</span>`;
+        } else {
+          let details = [];
+          if (customer.phone) details.push(`Phone: ${customer.phone}`);
+          if (customer.type) details.push(customer.type);
+          html += `<span style="font-size: 0.85rem;">${details.join(' • ')}</span>`;
+          if (customer.notes) {
+            html += `<br><span style="font-size:0.8rem; color:#64748b;">Notes: ${customer.notes}</span>`;
+          }
+        }
+        card.innerHTML = html;
+
+        // Edit button (pencil) - positioned left of delete
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-btn';
+        editBtn.textContent = '✎';
+        editBtn.setAttribute('data-id', customer.id);
+        editBtn.style.cssText = 'position:absolute; top:6px; right:26px; background:transparent; border:none; color:#0d9488; font-size:15px; line-height:1; cursor:pointer; padding:0 3px; opacity:0.75;';
+        editBtn.title = 'Edit this customer';
+        editBtn.setAttribute('aria-label', 'Edit customer');
+
+        editBtn.onmouseover = () => { editBtn.style.opacity = '1'; editBtn.style.color = '#0f766e'; };
+        editBtn.onmouseout = () => { editBtn.style.opacity = '0.75'; editBtn.style.color = '#0d9488'; };
+
+        card.appendChild(editBtn);
+
+        // Delete button created separately so it doesn't pollute search textContent
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-btn';
+        delBtn.textContent = '×';
+        delBtn.setAttribute('data-id', customer.id);
+        delBtn.style.cssText = 'position:absolute; top:6px; right:6px; background:transparent; border:none; color:#ef4444; font-size:18px; line-height:1; cursor:pointer; padding:0 4px; opacity:0.7;';
+        delBtn.title = 'Delete this customer';
+        delBtn.setAttribute('aria-label', 'Delete customer');
+
+        // Simple hover feedback
+        delBtn.onmouseover = () => { delBtn.style.opacity = '1'; delBtn.style.color = '#dc2626'; };
+        delBtn.onmouseout = () => { delBtn.style.opacity = '0.7'; delBtn.style.color = '#ef4444'; };
+
+        card.appendChild(delBtn);
+
+        customerList.appendChild(card);
+      });
+    }
+
+    // Load and render on page load
+    loadCustomers();
+    renderCustomers();
+
+    // Customer list and search
     const searchInput = document.getElementById('customer-search');
 
-    // Real-time search filter
+    // Real-time search filter (filters the rendered DOM cards)
     if (searchInput && customerList) {
       searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
@@ -198,7 +359,34 @@
       });
     }
 
-    // Customer form handling (demo)
+    // Edit + Delete customers using event delegation (works for cards added dynamically)
+    // Clicking the card body (away from buttons) will also load it for editing
+    if (customerList) {
+      customerList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('edit-btn')) {
+          const id = Number(e.target.getAttribute('data-id') || e.target.dataset.id);
+          if (id) {
+            editCustomer(id);
+          }
+        } else if (e.target.classList.contains('delete-btn')) {
+          const id = Number(e.target.getAttribute('data-id') || e.target.dataset.id);
+          if (id) {
+            deleteCustomer(id);
+          }
+        } else {
+          // Click on card body -> edit
+          const card = e.target.closest('.customer-card');
+          if (card && card.dataset.id) {
+            const id = Number(card.dataset.id);
+            if (id) {
+              editCustomer(id);
+            }
+          }
+        }
+      });
+    }
+
+    // Customer form handling (demo) with localStorage persistence
     const customerForm = document.getElementById('customer-form');
     const customerSuccess = document.getElementById('customer-success');
 
@@ -207,45 +395,91 @@
         e.preventDefault();
 
         // Collect form values
-        const name = document.getElementById('cust-name').value || 'New Customer';
+        const firstName = document.getElementById('cust-firstname').value || '';
+        const lastName = document.getElementById('cust-lastname').value || '';
         const phone = document.getElementById('cust-phone').value || '';
         const email = document.getElementById('cust-email').value || '';
         const address = document.getElementById('cust-address').value || '';
-        const type = document.getElementById('cust-type').value || 'Residential';
-        const date = document.getElementById('cust-date').value || 'TBD';
+        const type = document.getElementById('cust-type').value || 'Residential Home';
         const notes = document.getElementById('cust-notes').value || '';
 
-        // Show success message
-        customerSuccess.style.display = 'block';
-        customerSuccess.textContent = 'Customer ' + name + ' added successfully! (Demo)';
+        const fullName = `${firstName} ${lastName}`.trim() || 'New Customer';
 
-        // Create new customer card
-        const newCard = document.createElement('div');
-        newCard.className = 'customer-card';
-        newCard.style.cssText = 'background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;';
-        newCard.innerHTML = `
-          <strong>${name} — ${address ? address.split(',')[0] : 'New Location'}</strong><br>
-          <small style="color: #d4a853;">Newly Added</small><br>
-          <span style="font-size: 0.85rem;">${type} • Phone: ${phone} • Test: ${date}</span>
-          ${notes ? `<br><span style="font-size:0.8rem; color:#64748b;">Notes: ${notes}</span>` : ''}
-        `;
+        if (editingCustomerId) {
+          // Update existing customer
+          const idx = customers.findIndex(c => c.id === editingCustomerId);
+          if (idx !== -1) {
+            const existing = customers[idx];
+            existing.firstName = firstName;
+            existing.lastName = lastName;
+            existing.phone = phone;
+            existing.email = email;
+            existing.address = address;
+            existing.type = type;
+            existing.notes = notes;
+            // Switch to live fields for rendering and mark as updated
+            if (existing.details) delete existing.details;
+            existing.status = 'Updated';
+          }
 
-        // Add to the top of the list
-        customerList.insertBefore(newCard, customerList.firstChild);
+          saveCustomers();
+          renderCustomers();
 
-        // Re-apply current search filter to the new card
-        if (searchInput && searchInput.value) {
-          const event = new Event('input');
-          searchInput.dispatchEvent(event);
+          // Re-apply current search filter if active
+          if (searchInput && searchInput.value) {
+            const event = new Event('input');
+            searchInput.dispatchEvent(event);
+          }
+
+          // Show success message
+          customerSuccess.style.display = 'block';
+          customerSuccess.textContent = 'Customer ' + fullName + ' updated successfully! (Demo)';
+
+          customerForm.reset();
+          resetEditMode();
+        } else {
+          // Add new customer (original behavior)
+          const newCustomer = {
+            id: Date.now(),
+            firstName,
+            lastName,
+            phone,
+            email,
+            address,
+            type,
+            notes,
+            status: 'Newly Added'
+          };
+
+          customers.push(newCustomer);
+          saveCustomers();
+
+          renderCustomers();
+
+          if (searchInput && searchInput.value) {
+            const event = new Event('input');
+            searchInput.dispatchEvent(event);
+          }
+
+          customerSuccess.style.display = 'block';
+          customerSuccess.textContent = 'Customer ' + fullName + ' added successfully! (Demo)';
+
+          customerForm.reset();
         }
 
-        // Reset form
-        customerForm.reset();
-
-        // Hide success after 4 seconds
+        // Hide success after 4 seconds (for both add and update)
         setTimeout(() => {
           if (customerSuccess) customerSuccess.style.display = 'none';
         }, 4000);
+      });
+    }
+
+    // Setup cancel button for edit mode (once)
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    if (cancelEditBtn && customerForm) {
+      cancelEditBtn.addEventListener('click', function() {
+        customerForm.reset();
+        resetEditMode();
       });
     }
   </script>

@@ -25,8 +25,13 @@ Then open http://localhost:8080
 - `services.html` — Testing & mitigation details
 - `learn.html` — Learn section (radon education, FAQs, and resources)
 - `contact.html` — Contact form + service area
+- `login.html` — Secret login page (access by direct URL only)
+- `customers.html` — Customer management with add/search/edit/delete (localStorage)
+- `estimates.html` — Detailed radon mitigation estimate form + dynamic list (localStorage)
+- `reports.html` — Sample reports page
+- `invoices.html` — Sample invoices page
 - `css/styles.css` — Complete design system (navy/teal/gold)
-- `js/main.js` — Mobile menu, accordion interactions, form handling, scroll effects
+- `js/main.js` — Mobile menu, accordion interactions, form handling, scroll effects, login guards
 - `images/` — Logo + key photography
 
 ## Tech
@@ -34,6 +39,7 @@ Then open http://localhost:8080
 - Pure static site (no build step)
 - Responsive, accessible, modern UI
 - Ready for GitHub Pages or any static host
+- Client-side persistence with localStorage for demo (customers, estimates)
 
 ## Deployment
 

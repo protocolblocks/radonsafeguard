@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // If user is logged in, send them to the private customers page (the logged-in starting page)
+  // (this ensures original public nav only shows when not logged in)
+  if (localStorage.getItem('radonLoggedIn') === 'true' && 
+      !window.location.pathname.includes('customers.html') && 
+      !window.location.pathname.includes('estimates.html') &&
+      !window.location.pathname.includes('invoices.html') &&
+      !window.location.pathname.includes('reports.html')) {
+    window.location.href = 'customers.html';
+    return;
+  }
   const header = document.querySelector('.site-header');
   const menuToggle = document.querySelector('.menu-toggle');
   const navMobile = document.querySelector('.nav-mobile');
@@ -80,4 +90,54 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+
+  // Login modal functionality (demo only) - only relevant on public pages
+  const loginBtns = document.querySelectorAll('.login-btn');
+  const loginModal = document.getElementById('login-modal');
+
+  if (loginBtns.length && loginModal) {
+    loginBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginModal.style.display = 'block';
+        // close mobile nav if open
+        if (navMobile) navMobile.classList.remove('open');
+        if (menuToggle) menuToggle.classList.remove('active');
+      });
+    });
+
+    // Close modal
+    const closeBtn = loginModal.querySelector('.close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+      });
+    }
+
+    // Close when clicking outside the modal content
+    loginModal.addEventListener('click', (e) => {
+      if (e.target === loginModal) {
+        loginModal.style.display = 'none';
+      }
+    });
+
+    // Fake login form
+    const loginForm = document.getElementById('login-form');
+    const loginSuccess = loginModal.querySelector('.login-success');
+
+    if (loginForm && loginSuccess) {
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        loginSuccess.style.display = 'block';
+
+        // Mark as logged in and send to the private customers page (the logged-in starting page)
+        localStorage.setItem('radonLoggedIn', 'true');
+
+        setTimeout(() => {
+          window.location.href = 'customers.html';
+        }, 800);
+      });
+    }
+  }
 });
