@@ -38,7 +38,6 @@ Then open http://localhost:8080
 
 - Pure static site (no build step)
 - Responsive, accessible, modern UI
-- Ready for GitHub Pages or any static host
 - Client-side persistence with localStorage for demo (customers, estimates)
 
 ## Deployment
