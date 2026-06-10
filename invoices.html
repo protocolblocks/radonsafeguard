@@ -34,7 +34,7 @@
         <a href="estimates.html">Estimates</a>
         <a href="reports.html">Reports</a>
         <a href="invoices.html" class="active">Invoices</a>
-        <a href="#", class="logout-btn">Logout</a>
+        <a href="#" class="logout-btn">Logout</a>
       </nav>
     </div>
   </header>
@@ -44,21 +44,69 @@
       <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 20px rgba(12, 35, 64, 0.08);">
         <h2 style="color: var(--navy); margin: 0 0 1rem;">Your Invoices</h2>
         
-        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-          <strong>INV-2026-001 — 123 Maple St, Edmonton AB</strong><br>
-          Sub-Slab Depressurization<br>
-          <span style="color: #0d9488; font-weight: 600;">$2,650</span> • Due: July 15, 2026<br><br>
-          <button onclick="alert('Invoice marked as paid. (Demo)');" style="background: var(--teal); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Mark Paid</button>
-          <button onclick="alert('PDF download started. (Demo)');" style="background: transparent; color: var(--teal); border: 1px solid var(--teal); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-left: 0.5rem;">Download PDF</button>
+        <button onclick="showGenerateForm()" style="background: var(--teal); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-bottom: 1rem;">New Invoice</button>
+        
+        <!-- New Invoice Form (shown on button click, positioned above search and list) -->
+        <div id="generate-invoice-form" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+          <h3 style="margin: 0 0 0.75rem; color: var(--navy); font-size: 1rem;">Generate New Invoice</h3>
+          <form id="invoice-form" onsubmit="createInvoiceFromForm(event)" style="display: grid; gap: 0.75rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Customer Name *</label>
+                <input type="text" id="inv-customer" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Property Address *</label>
+                <input type="text" id="inv-address" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+              </div>
+            </div>
+            <div>
+              <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Work Description *</label>
+              <input type="text" id="inv-description" value="Sub-Slab Depressurization System" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Labor Cost ($) *</label>
+                <input type="number" id="inv-labor" value="1400" step="0.01" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Materials Cost ($) *</label>
+                <input type="number" id="inv-materials" value="550" step="0.01" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Testing & Other ($) *</label>
+                <input type="number" id="inv-testing" value="175" step="0.01" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Issued Date *</label>
+                <input type="date" id="inv-date" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">Due Date *</label>
+                <input type="date" id="inv-due" required style="width:100%; padding:0.45rem; border:1px solid #e2e8f0; border-radius:5px; font-size:0.9rem;">
+              </div>
+            </div>
+
+            <!-- Paid toggle, only shown in edit mode -->
+            <div id="inv-paid-container" style="display: none;">
+              <label style="display:block; font-size:0.8rem; margin-bottom:0.15rem; color:var(--navy);">
+                <input type="checkbox" id="inv-paid" style="margin-right:0.5rem; vertical-align: middle;"> 
+                Mark as Paid <span style="font-size:0.75rem; color:#64748b;">(uncheck to toggle back to Due)</span>
+              </label>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+              <button type="submit" style="background: var(--teal); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size:0.9rem;">Create Invoice</button>
+              <button type="button" onclick="hideGenerateForm()" style="background: transparent; color: #64748b; border: 1px solid #e2e8f0; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size:0.9rem;">Cancel</button>
+            </div>
+          </form>
         </div>
 
-        <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
-          <strong>INV-2026-002 — 456 Oak Ave, Sherwood Park AB</strong><br>
-          Crawl Space Mitigation<br>
-          <span style="color: #0d9488; font-weight: 600;">$2,125</span> • Due: July 20, 2026<br><br>
-          <button onclick="alert('Invoice marked as paid. (Demo)');" style="background: var(--teal); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">Mark Paid</button>
-          <button onclick="alert('PDF download started. (Demo)');" style="background: transparent; color: var(--teal); border: 1px solid var(--teal); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; margin-left: 0.5rem;">Download PDF</button>
-        </div>
+        <input type="text" id="invoice-search" placeholder="Search invoices by number, customer, address, or status..." 
+               style="width: 100%; padding: 0.55rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.9rem; margin-bottom: 1rem;">
+        
+        <div id="invoice-list"></div>
       </div>
     </div>
   </section>
@@ -69,6 +117,11 @@
         <div class="footer-brand">
           <span class="logo-text">Radon<span>Safeguard</span></span>
           <p>C-NRPP certified radon testing and mitigation professionals serving Edmonton, Alberta and surrounding communities since 2010. Your health and safety are our top priority.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.062 2.062 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+            <a href="#" aria-label="Google"><svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></a>
+          </div>
         </div>
         <div class="footer-col">
           <h4>Services</h4>
@@ -121,6 +174,324 @@
         window.location.href = 'index.html';
       });
     });
+
+    // Invoices persistence with localStorage - generates sample on load
+    const INV_STORAGE_KEY = 'radonSafeguardInvoices';
+    let invoices = [];
+    let editingInvoiceId = null;
+    let invoiceSearchInput = null;
+
+    function loadInvoices() {
+      const saved = localStorage.getItem(INV_STORAGE_KEY);
+      if (saved) {
+        invoices = JSON.parse(saved);
+      } else {
+        // Seed with realistic sample invoices with full relevant details
+        const now = Date.now();
+        invoices = [
+          {
+            id: now - 200000,
+            invoiceNumber: 'INV-2026-001',
+            date: '2026-06-10',
+            dueDate: '2026-07-15',
+            customerName: 'Sarah M.',
+            address: '123 Maple St, Edmonton AB',
+            description: 'Sub-Slab Depressurization System',
+            lineItems: [
+              { desc: 'Labor - Installation & Setup', amount: 1800 },
+              { desc: 'Materials - Fan, Piping, Sealing Kit', amount: 650 },
+              { desc: 'Post-Installation Verification Testing', amount: 200 }
+            ],
+            subtotal: 2650,
+            tax: 132.50,
+            total: 2782.50,
+            status: 'Due'
+          },
+          {
+            id: now - 100000,
+            invoiceNumber: 'INV-2026-002',
+            date: '2026-06-05',
+            dueDate: '2026-07-20',
+            customerName: 'James R.',
+            address: '456 Oak Ave, Sherwood Park AB',
+            description: 'Crawl Space Mitigation System',
+            lineItems: [
+              { desc: 'Labor - Encapsulation & Fan Install', amount: 1400 },
+              { desc: 'Materials - Vapor Barrier, Fan, Piping', amount: 550 },
+              { desc: 'Testing, Certification & Documentation', amount: 175 }
+            ],
+            subtotal: 2125,
+            tax: 106.25,
+            total: 2231.25,
+            status: 'Due'
+          }
+        ];
+        saveInvoices();
+      }
+    }
+
+    function saveInvoices() {
+      localStorage.setItem(INV_STORAGE_KEY, JSON.stringify(invoices));
+    }
+
+    function renderInvoices() {
+      const container = document.getElementById('invoice-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (invoices.length === 0) {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'color:#64748b; font-size:0.9rem; padding:0.5rem 0;';
+        empty.textContent = 'No invoices yet. Click "New Invoice" to create one.';
+        container.appendChild(empty);
+        return;
+      }
+
+      invoices.forEach(inv => {
+        const card = document.createElement('div');
+        card.className = 'invoice-card';
+        card.style.cssText = 'border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #fff;';
+
+        let lineItemsHtml = '';
+        inv.lineItems.forEach(item => {
+          lineItemsHtml += `<div style="display:flex; justify-content:space-between; font-size:0.9rem; margin:2px 0;"><span>${item.desc}</span><span>$${item.amount.toFixed(2)}</span></div>`;
+        });
+
+        const statusColor = inv.status === 'Paid' ? '#166534' : '#0d9488';
+        const statusText = inv.status === 'Paid' ? 'PAID' : 'DUE';
+
+        let html = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <strong style="font-size:1.05rem;">${inv.invoiceNumber}</strong><br>
+              <small style="color:#64748b;">Issued: ${inv.date} • Due: ${inv.dueDate}</small>
+            </div>
+            <div style="text-align:right;">
+              <span style="color:${statusColor}; font-weight:600; font-size:0.9rem;">${statusText}</span><br>
+              <strong style="font-size:1.1rem; color:#0d9488;">$${inv.total.toFixed(2)}</strong>
+            </div>
+          </div>
+
+          <div style="margin:0.5rem 0; padding:0.4rem 0; border-top:1px solid #f1f5f9; border-bottom:1px solid #f1f5f9;">
+            <small><strong>Bill To:</strong> ${inv.customerName}<br>${inv.address}</small><br>
+            <strong>${inv.description}</strong>
+          </div>
+
+          <div style="margin-bottom:0.5rem;">
+            <small style="font-weight:600; color:#64748b;">LINE ITEMS</small>
+            ${lineItemsHtml}
+          </div>
+
+          <div style="font-size:0.9rem; text-align:right; margin:0.4rem 0;">
+            <div>Subtotal: <strong>$${inv.subtotal.toFixed(2)}</strong></div>
+            <div>Tax (5% GST): <strong>$${inv.tax.toFixed(2)}</strong></div>
+            <div style="font-size:1rem; margin-top:2px;"><strong>Total: $${inv.total.toFixed(2)}</strong></div>
+          </div>
+
+          <div style="margin-top:0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+        `;
+
+        if (inv.status !== 'Paid') {
+          html += `<button onclick="markInvoicePaid(${inv.id})" style="background:var(--teal); color:white; border:none; padding:0.4rem 0.8rem; border-radius:5px; font-size:0.8rem; cursor:pointer;">Mark Paid</button>`;
+        }
+
+        html += `<button onclick="downloadInvoicePDF(${inv.id})" style="background:transparent; color:var(--teal); border:1px solid var(--teal); padding:0.4rem 0.8rem; border-radius:5px; font-size:0.8rem; cursor:pointer;">Download PDF</button>`;
+        html += `<button onclick="editInvoice(${inv.id})" style="background:transparent; color:#0d9488; border:1px solid #0d9488; padding:0.4rem 0.8rem; border-radius:5px; font-size:0.8rem; cursor:pointer;">Edit</button>`;
+        html += `<button onclick="deleteInvoice(${inv.id})" style="background:transparent; color:#ef4444; border:1px solid #ef4444; padding:0.4rem 0.8rem; border-radius:5px; font-size:0.8rem; cursor:pointer;">Delete</button>`;
+
+        html += `</div>`;
+
+        card.innerHTML = html;
+        container.appendChild(card);
+      });
+
+      // Re-apply active search filter after re-render (e.g. after generate, mark paid, delete)
+      if (invoiceSearchInput && invoiceSearchInput.value) {
+        const evt = new Event('input');
+        invoiceSearchInput.dispatchEvent(evt);
+      }
+    }
+
+    function showGenerateForm() {
+      const formDiv = document.getElementById('generate-invoice-form');
+      const form = document.getElementById('invoice-form');
+      if (formDiv && form) {
+        formDiv.style.display = 'block';
+        // Set titles based on mode
+        const h3 = formDiv.querySelector('h3');
+        const submitBtn = formDiv.querySelector('button[type="submit"]');
+        const paidContainer = document.getElementById('inv-paid-container');
+        if (editingInvoiceId) {
+          if (h3) h3.textContent = 'Edit Invoice';
+          if (submitBtn) submitBtn.textContent = 'Save Changes';
+          if (paidContainer) paidContainer.style.display = 'block';
+        } else {
+          if (h3) h3.textContent = 'Generate New Invoice';
+          if (submitBtn) submitBtn.textContent = 'Create Invoice';
+          if (paidContainer) paidContainer.style.display = 'none';
+        }
+        // Set sensible defaults for dates only when creating new (not editing)
+        if (!editingInvoiceId) {
+          const today = new Date().toISOString().split('T')[0];
+          const dueDate = new Date();
+          dueDate.setDate(dueDate.getDate() + 30);
+          const dueStr = dueDate.toISOString().split('T')[0];
+          const dateEl = document.getElementById('inv-date');
+          const dueEl = document.getElementById('inv-due');
+          if (dateEl) dateEl.value = today;
+          if (dueEl) dueEl.value = dueStr;
+        }
+      }
+    }
+
+    function hideGenerateForm() {
+      const formDiv = document.getElementById('generate-invoice-form');
+      const form = document.getElementById('invoice-form');
+      if (formDiv && form) {
+        formDiv.style.display = 'none';
+        form.reset();
+        // Reset titles, editing state, and paid checkbox
+        const h3 = formDiv.querySelector('h3');
+        if (h3) h3.textContent = 'Generate New Invoice';
+        const submitBtn = formDiv.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.textContent = 'Create Invoice';
+        const paidCheck = document.getElementById('inv-paid');
+        if (paidCheck) paidCheck.checked = false;
+        editingInvoiceId = null;
+      }
+    }
+
+    function createInvoiceFromForm(e) {
+      e.preventDefault();
+
+      const customer = document.getElementById('inv-customer').value.trim();
+      const address = document.getElementById('inv-address').value.trim();
+      const desc = document.getElementById('inv-description').value.trim();
+      const labor = parseFloat(document.getElementById('inv-labor').value) || 0;
+      const materials = parseFloat(document.getElementById('inv-materials').value) || 0;
+      const testing = parseFloat(document.getElementById('inv-testing').value) || 0;
+      const date = document.getElementById('inv-date').value;
+      const due = document.getElementById('inv-due').value;
+
+      const subtotal = labor + materials + testing;
+      const tax = Math.round(subtotal * 0.05 * 100) / 100;
+      const total = subtotal + tax;
+
+      // For edit, allow toggling paid status via checkbox
+      const paidCheck = document.getElementById('inv-paid');
+      const newStatus = (editingInvoiceId && paidCheck) 
+        ? (paidCheck.checked ? 'Paid' : 'Due') 
+        : 'Due';
+
+      const newInv = {
+        id: editingInvoiceId || Date.now(),
+        invoiceNumber: editingInvoiceId ? invoices.find(i => i.id === editingInvoiceId).invoiceNumber : `INV-2026-${String(invoices.length + 10).padStart(3, '0')}`,
+        date: date,
+        dueDate: due,
+        customerName: customer,
+        address: address,
+        description: desc,
+        lineItems: [
+          { desc: 'Labor - Installation & Setup', amount: labor },
+          { desc: 'Materials - Fan, Piping, Sealing Kit', amount: materials },
+          { desc: 'Testing & Certification', amount: testing }
+        ],
+        subtotal: subtotal,
+        tax: tax,
+        total: total,
+        status: editingInvoiceId ? newStatus : 'Due'
+      };
+
+      if (editingInvoiceId) {
+        const idx = invoices.findIndex(i => i.id === editingInvoiceId);
+        if (idx !== -1) {
+          invoices[idx] = newInv;
+        }
+        editingInvoiceId = null;
+      } else {
+        invoices.push(newInv);
+      }
+
+      saveInvoices();
+      renderInvoices();
+      hideGenerateForm();
+    }
+
+    function editInvoice(id) {
+      const inv = invoices.find(i => i.id === id);
+      if (!inv) return;
+
+      // Populate form fields
+      document.getElementById('inv-customer').value = inv.customerName || '';
+      document.getElementById('inv-address').value = inv.address || '';
+      document.getElementById('inv-description').value = inv.description || '';
+
+      if (inv.lineItems && inv.lineItems.length >= 3) {
+        document.getElementById('inv-labor').value = inv.lineItems[0].amount || '';
+        document.getElementById('inv-materials').value = inv.lineItems[1].amount || '';
+        document.getElementById('inv-testing').value = inv.lineItems[2].amount || '';
+      }
+
+      document.getElementById('inv-date').value = inv.date || '';
+      document.getElementById('inv-due').value = inv.dueDate || '';
+
+      // Set paid checkbox for edit mode
+      const paidCheck = document.getElementById('inv-paid');
+      if (paidCheck) {
+        paidCheck.checked = (inv.status === 'Paid');
+      }
+
+      editingInvoiceId = id;
+
+      // Show the form (showGenerateForm will handle titles based on editingInvoiceId)
+      showGenerateForm();
+    }
+
+    function deleteInvoice(id) {
+      if (!confirm('Delete this invoice? This cannot be undone. (Demo)')) {
+        return;
+      }
+      invoices = invoices.filter(i => i.id !== id);
+      saveInvoices();
+      renderInvoices();
+    }
+
+    function markInvoicePaid(id) {
+      const inv = invoices.find(i => i.id === id);
+      if (inv) {
+        inv.status = 'Paid';
+        saveInvoices();
+        renderInvoices();
+      }
+    }
+
+    function downloadInvoicePDF(id) {
+      const inv = invoices.find(i => i.id === id);
+      if (inv) {
+        alert(`PDF download started for ${inv.invoiceNumber}.\n\n(Demo only - in a real app this would generate a formatted PDF with all line items, totals, and payment details.)`);
+      }
+    }
+
+    function saveInvoices() {
+      localStorage.setItem(INV_STORAGE_KEY, JSON.stringify(invoices));
+    }
+
+    // Initialize: load samples (or persisted) and render
+    loadInvoices();
+    renderInvoices();
+
+    // Real-time search for invoices (filters the rendered cards)
+    invoiceSearchInput = document.getElementById('invoice-search');
+    if (invoiceSearchInput) {
+      invoiceSearchInput.addEventListener('input', function() {
+        const term = this.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('#invoice-list .invoice-card');
+        cards.forEach(card => {
+          const txt = card.textContent.toLowerCase();
+          card.style.display = txt.includes(term) ? '' : 'none';
+        });
+      });
+    }
   </script>
 </body>
 </html>
